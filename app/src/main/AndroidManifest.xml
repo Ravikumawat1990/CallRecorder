@@ -6,6 +6,12 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+
 
     <application
         android:allowBackup="true"
@@ -35,6 +41,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".view.ViewNotes" />
         <activity android:name=".view.ViewContactHistory"></activity>
+
+        <!--  <service
+              android:name=".callrecord.service.CallRecordService"
+              android:exported="true" />-->
     </application>
 
 </manifest>

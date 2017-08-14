@@ -1,6 +1,8 @@
 package app.com.ravi.callrecorder.view;
 
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,21 +14,31 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.aykuttasil.callrecord.CallRecord;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import app.com.ravi.callrecorder.R;
 import app.com.ravi.callrecorder.adapter.ViewPagerAdapter;
 import app.com.ravi.callrecorder.fragment.FragHome;
+import app.com.ravi.callrecorder.util.MyCallRecordReceiver;
 import app.com.ravi.callrecorder.util.Utils;
 
 public class View_home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    private static final String TAG = "View_home";
     TabLayout tabLayout;
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
+    CallRecord callRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +49,39 @@ public class View_home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setTitle(getString(R.string.recordings));
         setSupportActionBar(toolbar);
+
+        //    callRecord = CallRecord.init(this);
+
+        callRecord = CallRecord.initService(this);
+        try {
+
+           /* callRecord = new CallRecord.Builder(this)
+                    .setRecordFileName("Record_" + new SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(new Date()))
+                    .setRecordDirName("CallRecorderDir")
+                    .setRecordDirPath(Environment.getExternalStorageDirectory().getPath())
+                    .setShowSeed(true)
+                    .build();*/
+
+            callRecord.changeReceiver(new MyCallRecordReceiver(callRecord));
+
+            callRecord.enableSaveFile();
+
+            callRecord = new CallRecord.Builder(this)
+                    .setRecordFileName("Record_" + new SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(new Date()))
+                    .setRecordDirName("CallRecord")
+                    .setRecordDirPath(Environment.getExternalStorageDirectory().getPath())
+                    .setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                    .setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
+                    .setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
+                    .setShowSeed(true)
+                    .build();
+
+            callRecord.startCallRecordService();
+
+        } catch (Exception e) {
+            Log.i(TAG, "onCreate: ");
+
+        }
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -136,5 +181,37 @@ public class View_home extends AppCompatActivity
             default:
                 break;
         }
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            //  callRecord.startCallReceiver();
+            callRecord.enableSaveFile();
+            callRecord.changeRecordDirName("NewDirName");
+        } catch (Exception e) {
+            Log.i(TAG, "onStart: " + e.getMessage());
+
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+
+
+        try {
+            Log.i("CallRecord", "StopCallRecordClick");
+            callRecord.disableSaveFile();
+            callRecord.changeRecordFileName("NewFileName");
+        } catch (Exception e) {
+            Log.i(TAG, "onStop: " + e.getMessage());
+
+        }
+
+        super.onStop();
+
     }
 }
