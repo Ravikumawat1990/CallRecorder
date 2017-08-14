@@ -70,9 +70,10 @@ public class View_home extends AppCompatActivity
                     .setRecordFileName("Record_" + new SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(new Date()))
                     .setRecordDirName("CallRecord")
                     .setRecordDirPath(Environment.getExternalStorageDirectory().getPath())
-                    .setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-                    .setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
-                    .setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
+                    .setAudioSource(MediaRecorder.AudioSource.MIC)
+                    .setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
+                    .setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
+
                     .setShowSeed(true)
                     .build();
 
