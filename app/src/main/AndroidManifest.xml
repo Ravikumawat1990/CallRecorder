@@ -14,6 +14,7 @@
 
 
     <application
+        android:name=".view.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -42,9 +43,14 @@
         <activity android:name=".view.ViewNotes" />
         <activity android:name=".view.ViewContactHistory"></activity>
 
-        <!--  <service
-              android:name=".callrecord.service.CallRecordService"
-              android:exported="true" />-->
+        <!-- <service
+             android:name=".callrecord.service.CallRecordService"
+             android:exported="true" />-->
+        <service
+            android:name=".service.CallRecordingService"
+            android:exported="true" />
+
+
     </application>
 
 </manifest>

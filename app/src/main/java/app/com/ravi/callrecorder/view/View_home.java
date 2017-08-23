@@ -1,5 +1,6 @@
 package app.com.ravi.callrecorder.view;
 
+import android.content.Intent;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,16 +19,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.aykuttasil.callrecord.CallRecord;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import app.com.ravi.callrecorder.R;
 import app.com.ravi.callrecorder.adapter.ViewPagerAdapter;
+import app.com.ravi.callrecorder.callrecord.CallRecord;
 import app.com.ravi.callrecorder.fragment.FragHome;
-import app.com.ravi.callrecorder.util.MyCallRecordReceiver;
+import app.com.ravi.callrecorder.service.CallRecordingService;
 import app.com.ravi.callrecorder.util.Utils;
 
 public class View_home extends AppCompatActivity
@@ -50,39 +50,9 @@ public class View_home extends AppCompatActivity
         setTitle(getString(R.string.recordings));
         setSupportActionBar(toolbar);
 
-        //    callRecord = CallRecord.init(this);
+        Intent intent = new Intent(View_home.this, CallRecordingService.class);
+        startService(intent);
 
-        callRecord = CallRecord.initService(this);
-        try {
-
-           /* callRecord = new CallRecord.Builder(this)
-                    .setRecordFileName("Record_" + new SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(new Date()))
-                    .setRecordDirName("CallRecorderDir")
-                    .setRecordDirPath(Environment.getExternalStorageDirectory().getPath())
-                    .setShowSeed(true)
-                    .build();*/
-
-            callRecord.changeReceiver(new MyCallRecordReceiver(callRecord));
-
-            callRecord.enableSaveFile();
-
-            callRecord = new CallRecord.Builder(this)
-                    .setRecordFileName("Record_" + new SimpleDateFormat("ddMMyyyyHHmmss", Locale.US).format(new Date()))
-                    .setRecordDirName("CallRecord")
-                    .setRecordDirPath(Environment.getExternalStorageDirectory().getPath())
-                    .setAudioSource(MediaRecorder.AudioSource.MIC)
-                    .setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
-                    .setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
-
-                    .setShowSeed(true)
-                    .build();
-
-            callRecord.startCallRecordService();
-
-        } catch (Exception e) {
-            Log.i(TAG, "onCreate: ");
-
-        }
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -185,34 +155,7 @@ public class View_home extends AppCompatActivity
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        try {
-            //  callRecord.startCallReceiver();
-            callRecord.enableSaveFile();
-            callRecord.changeRecordDirName("NewDirName");
-        } catch (Exception e) {
-            Log.i(TAG, "onStart: " + e.getMessage());
-
-        }
-
-    }
-
-    @Override
-    protected void onStop() {
 
 
-        try {
-            Log.i("CallRecord", "StopCallRecordClick");
-            callRecord.disableSaveFile();
-            callRecord.changeRecordFileName("NewFileName");
-        } catch (Exception e) {
-            Log.i(TAG, "onStop: " + e.getMessage());
 
-        }
-
-        super.onStop();
-
-    }
 }

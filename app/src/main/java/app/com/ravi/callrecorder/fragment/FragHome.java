@@ -2,6 +2,7 @@ package app.com.ravi.callrecorder.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import app.com.ravi.callrecorder.model.CallDetailPojo;
 import app.com.ravi.callrecorder.model.EntryItem;
 import app.com.ravi.callrecorder.model.Item;
 import app.com.ravi.callrecorder.model.SectionItem;
+import app.com.ravi.callrecorder.service.CallRecordingService;
 
 
 public class FragHome extends Fragment {
@@ -47,6 +49,7 @@ public class FragHome extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview);
 
 
+        //finish();
         ArrayList<CallDetailPojo> detailPojos = new ArrayList<>();
 
         for (int i = 0; i < 30; i++) {

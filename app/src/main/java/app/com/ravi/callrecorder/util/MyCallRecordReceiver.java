@@ -2,11 +2,10 @@ package app.com.ravi.callrecorder.util;
 
 import android.content.Context;
 
-import com.aykuttasil.callrecord.CallRecord;
-import com.aykuttasil.callrecord.receiver.CallRecordReceiver;
-
 import java.util.Date;
 
+import app.com.ravi.callrecorder.callrecord.CallRecord;
+import app.com.ravi.callrecorder.callrecord.receiver.CallRecordReceiver;
 
 
 /**
