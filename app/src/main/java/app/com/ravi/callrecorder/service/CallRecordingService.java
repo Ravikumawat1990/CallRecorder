@@ -13,6 +13,13 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Random;
+
+import app.com.ravi.callrecorder.database.NotiModel;
+import app.com.ravi.callrecorder.database.tbl_notification;
 
 /**
  * Created by NetSupport on 23-08-2017.
@@ -24,7 +31,8 @@ public class CallRecordingService extends Service {
     int i = 0;
     String fname;
     MediaRecorder recorder;
-
+    boolean isIncoming = false;
+    String callStatus = "";
 
     BroadcastReceiver CallRecorder = new BroadcastReceiver() {
         @Override
@@ -37,6 +45,11 @@ public class CallRecordingService extends Service {
                 Toast.makeText(getApplicationContext(), state, Toast.LENGTH_LONG).show();
 
                 Toast.makeText(arg0, "Start CALLED " + recording + fname, Toast.LENGTH_LONG).show();
+                if (isIncoming) {
+                    callStatus = "true";
+                } else {
+                    callStatus = "false";
+                }
 
                 startRecording();
 
@@ -51,7 +64,10 @@ public class CallRecordingService extends Service {
 
             if (TelephonyManager.EXTRA_STATE_RINGING.equals(state)) {
 
+                isIncoming = true;
                 fname = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+                Toast.makeText(getApplicationContext(), "isIncoming true", Toast.LENGTH_LONG).show();
+
                 Toast.makeText(getApplicationContext(), state + " : " + fname, Toast.LENGTH_LONG).show();
             }
         }
@@ -62,6 +78,8 @@ public class CallRecordingService extends Service {
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             fname = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
+            Toast.makeText(getApplicationContext(), "isIncoming false", Toast.LENGTH_LONG).show();
+            isIncoming = false;
         }
     };
 
@@ -70,7 +88,6 @@ public class CallRecordingService extends Service {
         // TODO Auto-generated method stub
         super.onCreate();
         Toast.makeText(getApplicationContext(), "Service Created", Toast.LENGTH_LONG).show();
-
         IntentFilter RecFilter = new IntentFilter();
         RecFilter.addAction("android.intent.action.PHONE_STATE");
         registerReceiver(CallRecorder, RecFilter);
@@ -96,7 +113,7 @@ public class CallRecordingService extends Service {
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        //  unregisterReceiver(CallRecorder);
+        //   unregisterReceiver(CallRecorder);
         // unregisterReceiver(OutGoingNumDetector);
         Toast.makeText(getApplicationContext(), "Destroyed", Toast.LENGTH_SHORT).show();
     }
@@ -105,6 +122,8 @@ public class CallRecordingService extends Service {
         if (recording == false) {
             Toast.makeText(getApplicationContext(), "Recorder_Sarted" + fname, Toast.LENGTH_LONG).show();
             recorder = new MediaRecorder();
+
+
             if (recorder == null) {
                 recorder = new MediaRecorder();
             }
@@ -115,17 +134,29 @@ public class CallRecordingService extends Service {
                 recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
             } catch (Exception e) {
-
                 e.getMessage();
             }
-
+            int min = 1;
+            int max = 100000000;
             String file = Environment.getExternalStorageDirectory().toString();
-            String filepath = file + "/11111111111111";
+            String filepath = file + "/CallRecords";
             File dir = new File(filepath);
             dir.mkdirs();
-
-            filepath += "/" + fname + ".3gp";
+            Random r = new Random();
+            int i1 = r.nextInt(max - min + 1) + min;
+            filepath += "/" + fname + "" + String.valueOf(i1) + "" + ".3gp";
             recorder.setOutputFile(filepath);
+
+
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            ArrayList<NotiModel> notiModels = new ArrayList<>();
+            NotiModel notiModel = new NotiModel();
+            notiModel.setName(fname);
+            notiModel.setNumber(filepath);
+            notiModel.setDatetime(date);
+            notiModel.setCallType(callStatus);
+            notiModels.add(notiModel);
+            tbl_notification.Insert(notiModels);
 
             try {
                 recorder.prepare();

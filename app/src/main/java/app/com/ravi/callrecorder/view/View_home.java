@@ -1,9 +1,8 @@
 package app.com.ravi.callrecorder.view;
 
 import android.content.Intent;
-import android.media.MediaRecorder;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,18 +14,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import app.com.ravi.callrecorder.R;
 import app.com.ravi.callrecorder.adapter.ViewPagerAdapter;
 import app.com.ravi.callrecorder.callrecord.CallRecord;
-import app.com.ravi.callrecorder.fragment.FragHome;
+import app.com.ravi.callrecorder.fragment.FragInbox;
 import app.com.ravi.callrecorder.service.CallRecordingService;
 import app.com.ravi.callrecorder.util.Utils;
 
@@ -39,12 +33,14 @@ public class View_home extends AppCompatActivity
     ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
     CallRecord callRecord;
+    public static SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_view_home);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setTitle(getString(R.string.recordings));
@@ -141,8 +137,8 @@ public class View_home extends AppCompatActivity
         Fragment fragment = null;
         switch (i) {
             case 0:
-                fragment = new FragHome();
-                ft.add(R.id.container, fragment).addToBackStack("FragHome");
+                fragment = new FragInbox();
+                ft.add(R.id.container, fragment).addToBackStack("FragInbox");
                 fm.popBackStack();
                 ft.commit();
 
@@ -153,9 +149,6 @@ public class View_home extends AppCompatActivity
                 break;
         }
     }
-
-
-
 
 
 }
