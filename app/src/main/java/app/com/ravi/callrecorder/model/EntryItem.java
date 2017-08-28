@@ -11,14 +11,44 @@ public class EntryItem implements Item {
     String isCloud;
     String callDuration;
     String perPic;
+    String time;
+    String isSave;
+    String tempfilepath;
 
+    public String getIsSave() {
+        return isSave;
+    }
 
-    public EntryItem(String name, String callType, String isCloud, String callDuration, String perPic) {
+    public void setIsSave(String isSave) {
+        this.isSave = isSave;
+    }
+
+    public String getTempfilepath() {
+        return tempfilepath;
+    }
+
+    public void setTempfilepath(String tempfilepath) {
+        this.tempfilepath = tempfilepath;
+    }
+
+    public EntryItem(String name, String callType, String isCloud, String callDuration, String perPic, String time, String tempfilepath, String isSave) {
         this.name = name;
         this.callType = callType;
         this.isCloud = isCloud;
         this.callDuration = callDuration;
         this.perPic = perPic;
+        this.time = time;
+        this.tempfilepath = tempfilepath;
+        this.isSave = isSave;
+
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getName() {

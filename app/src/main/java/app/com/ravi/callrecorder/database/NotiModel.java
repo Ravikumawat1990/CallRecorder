@@ -12,7 +12,33 @@ public class NotiModel {
     String number;
     String datetime;
     String callDuration;
+    String time;
+    String tempFile;
+    String isSave;
 
+    public String getIsSave() {
+        return isSave;
+    }
+
+    public void setIsSave(String isSave) {
+        this.isSave = isSave;
+    }
+
+    public String getTempFile() {
+        return tempFile;
+    }
+
+    public void setTempFile(String tempFile) {
+        this.tempFile = tempFile;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     String callType;
     String isCloud;

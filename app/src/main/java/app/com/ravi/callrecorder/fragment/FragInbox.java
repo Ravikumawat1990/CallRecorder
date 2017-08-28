@@ -2,8 +2,11 @@ package app.com.ravi.callrecorder.fragment;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,7 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import app.com.ravi.callrecorder.R;
 import app.com.ravi.callrecorder.adapter.callAdapter;
@@ -23,6 +29,7 @@ import app.com.ravi.callrecorder.database.tbl_notification;
 import app.com.ravi.callrecorder.model.EntryItem;
 import app.com.ravi.callrecorder.model.Item;
 import app.com.ravi.callrecorder.model.SectionItem;
+import me.everything.providers.android.calllog.CallsProvider;
 
 
 public class FragInbox extends Fragment {
@@ -53,30 +60,23 @@ public class FragInbox extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview);
 
 
-      /*  ArrayList<CallDetailPojo> detailPojos = new ArrayList<>();
-
-        for (int i = 0; i < 30; i++) {
-            CallDetailPojo callDetailPojo = new CallDetailPojo();
-            callDetailPojo.setName("Ravi kumawat");
-            callDetailPojo.setCallDuration("02:02");
-            callDetailPojo.setCallType("Incomming");
-            callDetailPojo.setPerPic("");
-            callDetailPojo.setIsCloud("0");
-            callDetailPojo.setTime("Monday   02:02");
-            detailPojos.add(callDetailPojo);
-        }*/
         models = tbl_notification.getSortDate();
 
+
         if (models != null) {
+            Collections.reverse(models);
             for (int i = 0; i < models.size(); i++) {
 
                 items.add(new SectionItem("", models.get(i).getDatetime()));
                 ArrayList<NotiModel> notiModels = tbl_notification.getAllData(models.get(i).getDatetime());
                 for (int j = 0; j < notiModels.size(); j++) {
-                    items.add(new EntryItem(getContactName(thisActivity, notiModels.get(i).getName()), notiModels.get(i).getPerPic(), notiModels.get(i).getDatetime(), notiModels.get(i).getCallDuration(), notiModels.get(i).getIsCloud()));
+
+                    items.add(new EntryItem(getContactName(thisActivity, notiModels.get(j).getName()), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave()));
                 }
             }
         }
+
+
         mAdapter = new callAdapter(items, thisActivity);
 
 
@@ -96,21 +96,25 @@ public class FragInbox extends Fragment {
     public void onResume() {
         super.onResume();
 
+
         if (models != null) {
             models.clear();
             items.clear();
         }
         models = tbl_notification.getSortDate();
+
         if (models != null) {
+            Collections.reverse(models);
             for (int i = 0; i < models.size(); i++) {
 
                 items.add(new SectionItem("", models.get(i).getDatetime()));
                 ArrayList<NotiModel> notiModels = tbl_notification.getAllData(models.get(i).getDatetime());
                 for (int j = 0; j < notiModels.size(); j++) {
-                    items.add(new EntryItem(getContactName(thisActivity, notiModels.get(i).getName()), notiModels.get(i).getPerPic(), notiModels.get(i).getDatetime(), notiModels.get(i).getCallDuration(), notiModels.get(i).getIsCloud()));
+                    items.add(new EntryItem(getContactName(thisActivity, notiModels.get(j).getName()), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave()));
                 }
             }
         }
+
         if (models != null) {
             models.size();
             mAdapter.notifyDataSetChanged();
@@ -132,7 +136,12 @@ public class FragInbox extends Fragment {
             }
             cursor.close();
         }
+        if (contactName.equals("")) {
+            contactName = "UnKnown";
+        }
 
         return contactName;
     }
+
+
 }

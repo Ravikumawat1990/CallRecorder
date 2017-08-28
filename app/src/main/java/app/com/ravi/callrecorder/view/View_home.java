@@ -22,12 +22,13 @@ import app.com.ravi.callrecorder.adapter.ViewPagerAdapter;
 import app.com.ravi.callrecorder.callrecord.CallRecord;
 import app.com.ravi.callrecorder.fragment.FragInbox;
 import app.com.ravi.callrecorder.service.CallRecordingService;
+import app.com.ravi.callrecorder.util.CM;
 import app.com.ravi.callrecorder.util.Utils;
 
 public class View_home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    private Boolean exit = false;
     private static final String TAG = "View_home";
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -86,7 +87,12 @@ public class View_home extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//***Change Here***
+            startActivity(intent);
+            finish();
+            System.exit(0);
         }
     }
 
@@ -116,13 +122,14 @@ public class View_home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_cloud) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_voidRecord) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_setting) {
+            CM.startActivity(View_home.this, ViewSetting.class);
+        } else if (id == R.id.nav_share) {
+            CM.shareApp(this);
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

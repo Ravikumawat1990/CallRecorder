@@ -13,8 +13,10 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -33,7 +35,11 @@ public class CallRecordingService extends Service {
     MediaRecorder recorder;
     boolean isIncoming = false;
     String callStatus = "";
-
+    static boolean flag = false;
+    static long start_time, end_time;
+    long total_time;
+    int min = 1;
+    int max = 100000000;
     BroadcastReceiver CallRecorder = new BroadcastReceiver() {
         @Override
         public void onReceive(Context arg0, Intent intent) {
@@ -59,6 +65,7 @@ public class CallRecordingService extends Service {
                 Toast.makeText(getApplicationContext(), state, Toast.LENGTH_LONG).show();
 
                 Toast.makeText(arg0, "STOP CALLED :" + recording, Toast.LENGTH_LONG).show();
+
                 stopRecording();
             }
 
@@ -66,7 +73,7 @@ public class CallRecordingService extends Service {
 
                 isIncoming = true;
                 fname = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
-                Toast.makeText(getApplicationContext(), "isIncoming true", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getApplicationContext(), "isIncoming true", Toast.LENGTH_LONG).show();
 
                 Toast.makeText(getApplicationContext(), state + " : " + fname, Toast.LENGTH_LONG).show();
             }
@@ -123,7 +130,7 @@ public class CallRecordingService extends Service {
             Toast.makeText(getApplicationContext(), "Recorder_Sarted" + fname, Toast.LENGTH_LONG).show();
             recorder = new MediaRecorder();
 
-
+            start_time = System.currentTimeMillis();
             if (recorder == null) {
                 recorder = new MediaRecorder();
             }
@@ -136,8 +143,7 @@ public class CallRecordingService extends Service {
             } catch (Exception e) {
                 e.getMessage();
             }
-            int min = 1;
-            int max = 100000000;
+
             String file = Environment.getExternalStorageDirectory().toString();
             String filepath = file + "/CallRecords";
             File dir = new File(filepath);
@@ -148,15 +154,24 @@ public class CallRecordingService extends Service {
             recorder.setOutputFile(filepath);
 
 
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            String date = new SimpleDateFormat("EEE, dd MMM yyyy").format(new Date());
+            DateFormat df = new SimpleDateFormat("hh:mm a"); //format time
+            String time = df.format(Calendar.getInstance().getTime());
+
             ArrayList<NotiModel> notiModels = new ArrayList<>();
             NotiModel notiModel = new NotiModel();
             notiModel.setName(fname);
             notiModel.setNumber(filepath);
             notiModel.setDatetime(date);
             notiModel.setCallType(callStatus);
+            notiModel.setCallDuration(String.valueOf(total_time));
+            notiModel.setTime(time);
+            notiModel.setTempFile(filepath);
+            notiModel.setIsSave("false");
             notiModels.add(notiModel);
+
             tbl_notification.Insert(notiModels);
+            total_time = 0;
 
             try {
                 recorder.prepare();
@@ -175,7 +190,9 @@ public class CallRecordingService extends Service {
     public void stopRecording() {
         if (recording == true) {
             Toast.makeText(getApplicationContext(), "Recorder_Relesed from " + recording, Toast.LENGTH_LONG).show();
-
+            end_time = System.currentTimeMillis();
+            //Total time talked =
+            total_time = end_time - start_time;
             recorder.stop();
             recorder.reset();
             recorder.release();

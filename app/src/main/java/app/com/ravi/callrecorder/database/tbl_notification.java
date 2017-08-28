@@ -24,6 +24,9 @@ public class tbl_notification {
     public static final String CALLTYPE = "callType";
     public static final String ISCLOUD = "isCloud";
     public static final String PERPIC = "perPic";
+    public static final String TIME = "time";
+    public static final String TEMPFILEPATH = "tempfilepath";
+    public static final String isSave = "isSave";
 
 
 //    public static ArrayList<DiscloserPojo> getAllData(String headerTitle) {
@@ -116,8 +119,9 @@ public class tbl_notification {
                 model.setCallType(cursor.getString(cursor.getColumnIndex(CALLTYPE)));
                 model.setIsCloud(cursor.getString(cursor.getColumnIndex(ISCLOUD)));
                 model.setPerPic(cursor.getString(cursor.getColumnIndex(PERPIC)));
-
-
+                model.setTime(cursor.getString(cursor.getColumnIndex(TIME)));
+                model.setTempFile(cursor.getString(cursor.getColumnIndex(TEMPFILEPATH)));
+                model.setIsSave(cursor.getString(cursor.getColumnIndex(isSave)));
                 arrModelList.add(model);
             } while (cursor.moveToNext());
             cursor.close();
@@ -310,6 +314,9 @@ public class tbl_notification {
         values.put(CALLTYPE, notiModels.get(0).getCallType());
         values.put(ISCLOUD, notiModels.get(0).getIsCloud());
         values.put(PERPIC, notiModels.get(0).getPerPic());
+        values.put(TIME, notiModels.get(0).getTime());
+        values.put(TEMPFILEPATH, notiModels.get(0).getTempFile());
+        values.put(isSave, notiModels.get(0).getIsSave());
 
 
         if (CM.CheckIsDataAlreadyInDBorNot(TableName, NAME, notiModels.get(0).getName())) {

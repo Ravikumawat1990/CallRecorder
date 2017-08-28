@@ -3,19 +3,19 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_cloud"
             android:icon="@mipmap/ic_cloud_black_24dp"
             android:title="Cloud account" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_voidRecord"
             android:icon="@mipmap/ic_settings_voice_black_24dp"
             android:title="Voice Recorder" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_setting"
             android:icon="@mipmap/ic_settings_black_24dp"
             android:title="Setting" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_share"
             android:icon="@mipmap/ic_share_black_24dp"
             android:title="Tools" />
     </group>

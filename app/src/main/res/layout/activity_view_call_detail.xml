@@ -54,18 +54,21 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_date_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="05/10/2017 02:30" />
 
                     <TextView
+                        android:id="@+id/callDuration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="02:03" />
 
                     <TextView
+                        android:id="@+id/fileType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
