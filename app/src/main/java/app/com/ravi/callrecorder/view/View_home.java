@@ -148,7 +148,6 @@ public class View_home extends AppCompatActivity
                 ft.add(R.id.container, fragment).addToBackStack("FragInbox");
                 fm.popBackStack();
                 ft.commit();
-
                 break;
 
 

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import app.com.ravi.callrecorder.R;
 import app.com.ravi.callrecorder.adapter.callAdapter;
@@ -51,6 +52,29 @@ public class FragSaved extends Fragment {
 
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview1);
+
+
+        models = tbl_notification.getSortDateSave();
+
+
+        if (models != null) {
+            Collections.reverse(models);
+            for (int i = 0; i < models.size(); i++) {
+
+                items.add(new SectionItem("", models.get(i).getDatetime()));
+                ArrayList<NotiModel> notiModels = tbl_notification.getAllDataSave(models.get(i).getDatetime());
+                for (int j = 0; j < notiModels.size(); j++) {
+                    items.add(new EntryItem(notiModels.get(j).getName(), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave(), String.valueOf(notiModels.get(j).getId())));
+                }
+            }
+        }
+
+
+        mAdapter = new callAdapter(items, thisActivity);
+
+
+        listView.setAdapter(mAdapter);
+        listView.invalidate();
 
 
       /*  ArrayList<CallDetailPojo> detailPojos = new ArrayList<>();
@@ -91,14 +115,29 @@ public class FragSaved extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-       /* if (models != null) {
+
+        if (models != null) {
             models.clear();
+            items.clear();
         }
-        models = tbl_notification.getSortDate();
+        models = tbl_notification.getSortDateSave();
+
+        if (models != null) {
+            Collections.reverse(models);
+            for (int i = 0; i < models.size(); i++) {
+
+                items.add(new SectionItem("", models.get(i).getDatetime()));
+                ArrayList<NotiModel> notiModels = tbl_notification.getAllDataSave(models.get(i).getDatetime());
+                for (int j = 0; j < notiModels.size(); j++) {
+                    items.add(new EntryItem(notiModels.get(j).getName(), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave(), String.valueOf(notiModels.get(j).getId())));
+                }
+            }
+        }
+
         if (models != null) {
             models.size();
             mAdapter.notifyDataSetChanged();
-        }*/
+        }
     }
 
     public static String getContactName(Context context, String phoneNumber) {

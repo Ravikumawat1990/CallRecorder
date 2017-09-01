@@ -22,6 +22,8 @@ public class Utils {
         sTheme = theme;
         activity.finish();
         activity.startActivity(new Intent(activity, activity.getClass()));
+        activity.overridePendingTransition(R.anim.push_in_from_left,
+                R.anim.push_out_to_right);
     }
 
     /**

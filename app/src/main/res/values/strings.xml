@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CallRecorder</string>
+    <string name="app_name">Makkhan Kitchen</string>  <!--//CallRecorder-->
     <string name="title_activity_view__theme">Sign in</string>
 
     <!-- Strings related to login -->

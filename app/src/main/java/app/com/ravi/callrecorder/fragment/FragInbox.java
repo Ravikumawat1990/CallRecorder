@@ -70,8 +70,7 @@ public class FragInbox extends Fragment {
                 items.add(new SectionItem("", models.get(i).getDatetime()));
                 ArrayList<NotiModel> notiModels = tbl_notification.getAllData(models.get(i).getDatetime());
                 for (int j = 0; j < notiModels.size(); j++) {
-
-                    items.add(new EntryItem(getContactName(thisActivity, notiModels.get(j).getName()), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave()));
+                    items.add(new EntryItem(notiModels.get(j).getName(), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave(), String.valueOf(notiModels.get(j).getId())));
                 }
             }
         }
@@ -110,7 +109,7 @@ public class FragInbox extends Fragment {
                 items.add(new SectionItem("", models.get(i).getDatetime()));
                 ArrayList<NotiModel> notiModels = tbl_notification.getAllData(models.get(i).getDatetime());
                 for (int j = 0; j < notiModels.size(); j++) {
-                    items.add(new EntryItem(getContactName(thisActivity, notiModels.get(j).getName()), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave()));
+                    items.add(new EntryItem(notiModels.get(j).getName(), notiModels.get(j).getCallType(), notiModels.get(j).getIsCloud(), notiModels.get(j).getCallDuration(), notiModels.get(j).getPerPic(), notiModels.get(j).getTime(), notiModels.get(j).getTempFile(), notiModels.get(j).getIsSave(), String.valueOf(notiModels.get(j).getId())));
                 }
             }
         }
@@ -120,27 +119,6 @@ public class FragInbox extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
 
-    }
-
-    public String getContactName(Context context, final String phoneNumber) {
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
-
-        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};
-
-        String contactName = "";
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                contactName = cursor.getString(0);
-            }
-            cursor.close();
-        }
-        if (contactName.equals("")) {
-            contactName = "UnKnown";
-        }
-
-        return contactName;
     }
 
 

@@ -95,7 +95,7 @@ public class callAdapter extends ArrayAdapter<Item> {
                     }
                 }
 
-                tv_person_name.setText(ei.getName());
+                tv_person_name.setText(getContactName(context, ei.getName()));
                 Date date;
                 if (ei.getCallDuration().toString().equals("0") || ei.getCallDuration().equals("")) {
                     //  date = new Date(ei.getCallDuration());
@@ -125,6 +125,8 @@ public class callAdapter extends ArrayAdapter<Item> {
                         intent.putExtra("calldura", ei.getCallDuration());
                         intent.putExtra("time", ei.getTime());
                         intent.putExtra("tempfile", ei.getTempfilepath());
+                        intent.putExtra("id", ei.getId());
+
                         context.startActivity(intent);
                     }
                 });
@@ -139,6 +141,7 @@ public class callAdapter extends ArrayAdapter<Item> {
     public static Bitmap retrieveContactPhoto(Context context, String number) {
         ContentResolver contentResolver = context.getContentResolver();
         String contactId = null;
+        number.replace("+91", "");
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
 
         String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
@@ -176,6 +179,27 @@ public class callAdapter extends ArrayAdapter<Item> {
             e.printStackTrace();
         }
         return photo;
+    }
+
+    public String getContactName(Context context, final String phoneNumber) {
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+
+        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};
+
+        String contactName = "";
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                contactName = cursor.getString(0);
+            }
+            cursor.close();
+        }
+        if (contactName.equals("")) {
+            contactName = "UnKnown";
+        }
+
+        return contactName;
     }
 
 

@@ -75,6 +75,26 @@ public class tbl_notification {
 //        return arrModelList;
 //    }
 
+    public static ArrayList<NotiModel> getSortDateSave() {
+        SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
+        ArrayList<NotiModel> arrModelList = null;
+        Cursor cursor = null;
+
+        String key = "\"" + "true" + "\"";
+        String Query = "SELECT DISTINCT DATETIME FROM notification where isSave =" + key;
+        cursor = sqldb.rawQuery(Query, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            arrModelList = new ArrayList<NotiModel>();
+            do {
+                NotiModel model = new NotiModel();
+                model.setDatetime(cursor.getString(cursor.getColumnIndex(DATETIME)));
+                arrModelList.add(model);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }//end if(cursor!=null)
+        return arrModelList;
+    }
+
     public static ArrayList<NotiModel> getSortDate() {
         SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
         ArrayList<NotiModel> arrModelList = null;
@@ -95,6 +115,37 @@ public class tbl_notification {
         return arrModelList;
     }
 
+
+    public static ArrayList<NotiModel> getAllDataSave(String datetime) {
+        SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
+        ArrayList<NotiModel> arrModelList = null;
+        Cursor cursor = null;
+        String key = "\"" + datetime + "\"";
+        String key1 = "\"" + "true" + "\"";
+        String Query = "SELECT * FROM notification WHERE " + DATETIME + " = " + key + "and isSave =" + key1;
+        cursor = sqldb.rawQuery(Query, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            arrModelList = new ArrayList<NotiModel>();
+            do {
+                NotiModel model = new NotiModel();
+                model.setId(cursor.getInt(cursor.getColumnIndex(ID)));
+                model.setIsViewed(cursor.getString(cursor.getColumnIndex(ISVIEWED)));
+                model.setNumber(cursor.getString(cursor.getColumnIndex(NUMBER)));
+                model.setName(cursor.getString(cursor.getColumnIndex(NAME)));
+                model.setCallDuration(cursor.getString(cursor.getColumnIndex(CALLDURATION)));
+                model.setDatetime(cursor.getString(cursor.getColumnIndex(DATETIME)));
+                model.setCallType(cursor.getString(cursor.getColumnIndex(CALLTYPE)));
+                model.setIsCloud(cursor.getString(cursor.getColumnIndex(ISCLOUD)));
+                model.setPerPic(cursor.getString(cursor.getColumnIndex(PERPIC)));
+                model.setTime(cursor.getString(cursor.getColumnIndex(TIME)));
+                model.setTempFile(cursor.getString(cursor.getColumnIndex(TEMPFILEPATH)));
+                model.setIsSave(cursor.getString(cursor.getColumnIndex(isSave)));
+                arrModelList.add(model);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }//end if(cursor!=null)
+        return arrModelList;
+    }
 
     public static ArrayList<NotiModel> getAllData(String datetime) {
         SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
@@ -342,6 +393,11 @@ public class tbl_notification {
         return row;
     }
 
+    public static boolean deleteItem(String name) {
+        SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
+        return sqldb.delete(TableName, ID + "=" + name, null) > 0;
+    }
+
    /* public static void updateTbl(String key) {
         String isView = "1";
         String view = "0";
@@ -415,21 +471,21 @@ public class tbl_notification {
 //
 //    }
 
-    //    public static void updateDonloadStatus(String id, String status) {
-//        SQLiteDatabase sqldb = Ayala.sqLiteDatabase;
-//        String selectQuery = "UPDATE " + TableName + " SET " + DOWNLOADSTATUS
-//                + " = '" + status + "' WHERE "
-//                + PDFID + " = " + id;
-//        try {
-//            sqldb.execSQL(selectQuery);
-//
-//        } catch (Exception e) {
-//
-//            e.getStackTrace();
-//        }
-//
-//
-//    }
+    public static void updateIsSave(String id, String status) {
+        SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
+        String selectQuery = "UPDATE " + TableName + " SET " + isSave
+                + " = '" + status + "' WHERE "
+                + ID + " = " + id;
+        try {
+            sqldb.execSQL(selectQuery);
+
+        } catch (Exception e) {
+
+            e.getStackTrace();
+        }
+
+
+    }
 //    public static ArrayList<PojoItemDetail> getAlldataUsingMapperId(String id) {
 //        SQLiteDatabase sqldb = FoodOrdringApplication.sqLiteDatabase;
 //        ArrayList<PojoItemDetail> arrModelList = null;

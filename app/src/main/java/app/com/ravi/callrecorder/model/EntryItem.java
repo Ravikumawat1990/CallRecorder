@@ -14,6 +14,15 @@ public class EntryItem implements Item {
     String time;
     String isSave;
     String tempfilepath;
+    String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getIsSave() {
         return isSave;
@@ -31,7 +40,7 @@ public class EntryItem implements Item {
         this.tempfilepath = tempfilepath;
     }
 
-    public EntryItem(String name, String callType, String isCloud, String callDuration, String perPic, String time, String tempfilepath, String isSave) {
+    public EntryItem(String name, String callType, String isCloud, String callDuration, String perPic, String time, String tempfilepath, String isSave,String id) {
         this.name = name;
         this.callType = callType;
         this.isCloud = isCloud;
@@ -40,6 +49,7 @@ public class EntryItem implements Item {
         this.time = time;
         this.tempfilepath = tempfilepath;
         this.isSave = isSave;
+        this.id = id;
 
     }
 

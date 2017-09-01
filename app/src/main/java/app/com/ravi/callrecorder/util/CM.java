@@ -20,8 +20,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.AttributeSet;
@@ -68,6 +70,7 @@ import java.util.regex.Pattern;
 
 import app.com.ravi.callrecorder.BaseApp;
 import app.com.ravi.callrecorder.R;
+import app.com.ravi.callrecorder.view.View_Theme;
 import app.com.ravi.callrecorder.view.View_home;
 
 /**
@@ -547,6 +550,17 @@ public class CM {
                 "Share Using..."));
     }
 
+
+    public static void shareData(Context mContext, String txt) {
+
+       /* Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = txt;
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, mContext.getString(R.string.app_name));
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));*/
+    }
+
     @SuppressWarnings("deprecation")
     public static Spanned fromHtml(String source) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -953,5 +967,34 @@ public class CM {
         }
         return text;
     }*/
+
+    /*public void setTheme(SharedPreferences prefs) {
+
+        if (prefs.getBoolean("use_light_theme", false) == true) {
+            setTheme(R.style.AppThemeLight);
+        }
+    }*/
+
+
+    public static String getContactName(Context context, final String phoneNumber) {
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(phoneNumber));
+
+        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};
+
+        String contactName = "";
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                contactName = cursor.getString(0);
+            }
+            cursor.close();
+        }
+        if (contactName.equals("")) {
+            contactName = "UnKnown";
+        }
+
+        return contactName;
+    }
 }
 
