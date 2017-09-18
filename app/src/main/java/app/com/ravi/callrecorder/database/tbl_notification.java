@@ -28,6 +28,9 @@ public class tbl_notification {
     public static final String TEMPFILEPATH = "tempfilepath";
     public static final String isSave = "isSave";
 
+    public static final String NOTETITLE = "notetitle";
+    public static final String NOTEMSG = "notemsg";
+
 
 //    public static ArrayList<DiscloserPojo> getAllData(String headerTitle) {
 //
@@ -115,6 +118,61 @@ public class tbl_notification {
         return arrModelList;
     }
 
+    public static ArrayList<NotiModel> getSortDateNumber(String number) {
+        SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
+        ArrayList<NotiModel> arrModelList = null;
+        Cursor cursor = null;
+        //  String key = "0";
+        String key = "\"" + number + "\"";
+        String Query = "SELECT DISTINCT DATETIME FROM notification WHERE " + NAME + " = " + key;
+        cursor = sqldb.rawQuery(Query, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            arrModelList = new ArrayList<NotiModel>();
+            do {
+                NotiModel model = new NotiModel();
+                model.setDatetime(cursor.getString(cursor.getColumnIndex(DATETIME)));
+                arrModelList.add(model);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }//end if(cursor!=null)
+        return arrModelList;
+    }
+
+    public static ArrayList<NotiModel> getAllDataNumber(String number, String datetime) {
+        SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
+        ArrayList<NotiModel> arrModelList = null;
+        Cursor cursor = null;
+        String key = "\"" + number + "\"";
+        String key1 = "\"" + datetime + "\"";
+
+        String Query = "SELECT * FROM notification WHERE " + NAME + " = " + key + " and " + DATETIME +
+                "=" + key1;
+        cursor = sqldb.rawQuery(Query, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            arrModelList = new ArrayList<NotiModel>();
+            do {
+                NotiModel model = new NotiModel();
+                model.setId(cursor.getInt(cursor.getColumnIndex(ID)));
+                model.setIsViewed(cursor.getString(cursor.getColumnIndex(ISVIEWED)));
+                model.setNumber(cursor.getString(cursor.getColumnIndex(NUMBER)));
+                model.setName(cursor.getString(cursor.getColumnIndex(NAME)));
+                model.setCallDuration(cursor.getString(cursor.getColumnIndex(CALLDURATION)));
+                model.setDatetime(cursor.getString(cursor.getColumnIndex(DATETIME)));
+                model.setCallType(cursor.getString(cursor.getColumnIndex(CALLTYPE)));
+                model.setIsCloud(cursor.getString(cursor.getColumnIndex(ISCLOUD)));
+                model.setPerPic(cursor.getString(cursor.getColumnIndex(PERPIC)));
+                model.setTime(cursor.getString(cursor.getColumnIndex(TIME)));
+                model.setTempFile(cursor.getString(cursor.getColumnIndex(TEMPFILEPATH)));
+                model.setIsSave(cursor.getString(cursor.getColumnIndex(isSave)));
+                model.setNoteTitle(cursor.getString(cursor.getColumnIndex(NOTETITLE)));
+                model.setNoteMsg(cursor.getString(cursor.getColumnIndex(NOTEMSG)));
+                arrModelList.add(model);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }//end if(cursor!=null)
+        return arrModelList;
+    }
+
 
     public static ArrayList<NotiModel> getAllDataSave(String datetime) {
         SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
@@ -140,6 +198,9 @@ public class tbl_notification {
                 model.setTime(cursor.getString(cursor.getColumnIndex(TIME)));
                 model.setTempFile(cursor.getString(cursor.getColumnIndex(TEMPFILEPATH)));
                 model.setIsSave(cursor.getString(cursor.getColumnIndex(isSave)));
+                model.setNoteTitle(cursor.getString(cursor.getColumnIndex(NOTETITLE)));
+                model.setNoteMsg(cursor.getString(cursor.getColumnIndex(NOTEMSG)));
+
                 arrModelList.add(model);
             } while (cursor.moveToNext());
             cursor.close();
@@ -173,6 +234,9 @@ public class tbl_notification {
                 model.setTime(cursor.getString(cursor.getColumnIndex(TIME)));
                 model.setTempFile(cursor.getString(cursor.getColumnIndex(TEMPFILEPATH)));
                 model.setIsSave(cursor.getString(cursor.getColumnIndex(isSave)));
+                model.setNoteTitle(cursor.getString(cursor.getColumnIndex(NOTETITLE)));
+                model.setNoteMsg(cursor.getString(cursor.getColumnIndex(NOTEMSG)));
+
                 arrModelList.add(model);
             } while (cursor.moveToNext());
             cursor.close();
@@ -368,6 +432,8 @@ public class tbl_notification {
         values.put(TIME, notiModels.get(0).getTime());
         values.put(TEMPFILEPATH, notiModels.get(0).getTempFile());
         values.put(isSave, notiModels.get(0).getIsSave());
+        values.put(NOTETITLE, notiModels.get(0).getNoteTitle());
+        values.put(NOTEMSG, notiModels.get(0).getNoteMsg());
 
 
         if (CM.CheckIsDataAlreadyInDBorNot(TableName, NAME, notiModels.get(0).getName())) {
@@ -398,17 +464,15 @@ public class tbl_notification {
         return sqldb.delete(TableName, ID + "=" + name, null) > 0;
     }
 
-   /* public static void updateTbl(String key) {
-        String isView = "1";
-        String view = "0";
+    public static void updateTbl(String title, String msg, String id) {
         SQLiteDatabase sqldb = BaseApp.sqLiteDatabase;
-        String selectQuery = "UPDATE " + TableName + " SET " + ISVIEWED + " = " + isView + " WHERE " + KEY + " = " + key;
+        String selectQuery = "UPDATE " + TableName + " SET " + NOTETITLE + " = " + title + "and " + NOTEMSG + "=" + msg + " WHERE " + ID + " = " + id;
         try {
             sqldb.execSQL(selectQuery);
         } catch (Exception e) {
             e.getStackTrace();
         }
-    }*/
+    }
 
     public static void updateAllTbl() {
         String isView = "1";

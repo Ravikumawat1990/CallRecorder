@@ -15,6 +15,24 @@ public class NotiModel {
     String time;
     String tempFile;
     String isSave;
+    String noteTitle;
+    String noteMsg;
+
+    public String getNoteTitle() {
+        return noteTitle;
+    }
+
+    public void setNoteTitle(String noteTitle) {
+        this.noteTitle = noteTitle;
+    }
+
+    public String getNoteMsg() {
+        return noteMsg;
+    }
+
+    public void setNoteMsg(String noteMsg) {
+        this.noteMsg = noteMsg;
+    }
 
     public String getIsSave() {
         return isSave;

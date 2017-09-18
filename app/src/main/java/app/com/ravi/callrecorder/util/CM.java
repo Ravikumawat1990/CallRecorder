@@ -553,12 +553,12 @@ public class CM {
 
     public static void shareData(Context mContext, String txt) {
 
-       /* Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        String shareBody = txt;
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, mContext.getString(R.string.app_name));
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        startActivity(Intent.createChooser(sharingIntent, "Share via"));*/
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("video/3gp");
+        File fileToShare = new File(txt);
+        Uri uri = Uri.fromFile(fileToShare);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        mContext.startActivity(Intent.createChooser(sharingIntent, "Share Video!"));
     }
 
     @SuppressWarnings("deprecation")

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import app.com.ravi.callrecorder.R;
 import app.com.ravi.callrecorder.database.tbl_notification;
@@ -206,20 +207,29 @@ public class ViewCallDetail extends AppCompatActivity implements View.OnClickLis
                 showPopup(ViewCallDetail.this, "save", "Are you sure you want to save?");
                 break;
             case R.id.layoutEditCallNot:
-                CM.startActivity(ViewCallDetail.this, ViewNotes.class);
+
+                Intent intent3 = new Intent(ViewCallDetail.this, ViewNotes.class);
+                intent3.putExtra("id", id);
+                CM.startActivity(intent3, ViewCallDetail.this);
                 break;
             case R.id.deleteLayout:
                 showPopup(ViewCallDetail.this, "delete", "Are you sure you want to delete?");
                 break;
             case R.id.share_layout:
-                CM.shareData(this, "Contact Number : " + number.toString().trim());
+                CM.shareData(this, "Contact Number : " + filePath);
                 break;
             case R.id.call_layout:
                 break;
             case R.id.contact_layout:
-                CM.startActivity(ViewCallDetail.this, ViewContactHistory.class);
+                Intent intent1 = new Intent(this, ViewContactHistory.class);
+                intent1.putExtra("number", number);
+                CM.startActivity(intent1, this);
                 break;
             case R.id.contactDtl_layout:
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(getContactIDFromNumber(number, ViewCallDetail.this)));
+                intent.setData(uri);
+                startActivity(intent);
                 break;
             case R.id.dontRec_layout:
                 break;
@@ -292,5 +302,16 @@ public class ViewCallDetail extends AppCompatActivity implements View.OnClickLis
 
         }
 
+    }
+
+    public static int getContactIDFromNumber(String contactNumber, Context context) {
+        contactNumber = Uri.encode(contactNumber);
+        int phoneContactID = new Random().nextInt();
+        Cursor contactLookupCursor = context.getContentResolver().query(Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, contactNumber), new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID}, null, null, null);
+        while (contactLookupCursor.moveToNext()) {
+            phoneContactID = contactLookupCursor.getInt(contactLookupCursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
+        }
+        contactLookupCursor.close();
+        return phoneContactID;
     }
 }
